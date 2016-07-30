@@ -118,14 +118,25 @@
 	function getExistedRow(id) {
 
 		var i=0;
+
+		for(var a in w2ui['grid'].records){
+
+			if(w2ui['grid'].records[a]['id']==id)
+				return w2ui['grid'].records[a]['recid'];
+		}
+		return false;
+
+		/*
 		while(true){
-			var row = w2ui['grid'].nextRow(i++);
+
+			var row = w2ui['grid'].records(i++);
 			//alert("row = "+row)
 			if(row==null) return false;
 			row = w2ui['grid'].get(row);
 			if(row.id==id)
 				return row.recid;
 		}
+		*/
 	}
 	function getAndAddItem() {
 		var item = $("#item_data").val();
@@ -230,8 +241,9 @@
 		$("#totalBillPrice").val(parseInt($("#totalBillPrice").val())+parseInt(w2ui['grid'].get(recId-1).price));
 
 		console.clear()
-		for(var a in w2ui['grid'].records)
+		/*for(var a in w2ui['grid'].records)
 			console.log("name = "+w2ui['grid'].records[a].name+"  "+w2ui['grid'].records[a].totalPrice)
+			*/
 	}
 
 
