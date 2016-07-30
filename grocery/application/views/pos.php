@@ -101,10 +101,11 @@
 </div>
 
 
-	<div class="w2ui-field w2ui-span8" style="clear: both; text-align: center;">
+	<div class="w2ui-field w2ui-span8" style="clear: both; text-align: center;margin-left: 5%">
 
-
+		<button class="btn btn2" onclick="sell()">بيع</button>
 		الإجمالي <input  type="text" id="totalBillPrice" value="0" style="margin: 10px" />
+
 
 	</div>
 </div>
@@ -241,11 +242,45 @@
 		$("#totalBillPrice").val(parseInt($("#totalBillPrice").val())+parseInt(w2ui['grid'].get(recId-1).price));
 
 		console.clear()
-		/*for(var a in w2ui['grid'].records)
-			console.log("name = "+w2ui['grid'].records[a].name+"  "+w2ui['grid'].records[a].totalPrice)
-			*/
+		console.log(w2ui['grid'].records);
+
+
 	}
 
+	function sell() {
+
+		var json ;//= JSON.stringify(w2ui['grid'].records);
+
+
+		json = "[";
+		var temp ;
+		var first = 1;
+		for(var a in w2ui['grid'].records) {
+			temp = w2ui['grid'].records[a];
+			if(first++>1) json+=",";
+			json+='{"id":'+temp.id+', "price":'+temp.price+', "quantity":'+temp.quantity+'}'
+			//console.log("name = " + w2ui['grid'].records[a].name + "  " + w2ui['grid'].records[a].totalPrice)
+		}
+		json+="]";
+		console.log("json2 = "+json);
+
+		json = JSON.parse('{"json":'+json+'}')
+		console.log(json)
+		$.getJSON("handle_pos/save_bill", json, function (data) {
+
+			alert(data)
+
+			/*if (data.msg != undefined && data.msg == "ERROR") {
+				$("#error").text(item + " " + "غير موجود")
+			} else
+				addRec(data.name, data.id, data.price);
+*/
+
+
+
+		});
+
+	}
 
 	$('#grid').w2grid({
 		name   : 'grid',
