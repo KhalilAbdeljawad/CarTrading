@@ -47,7 +47,10 @@ class Handle_pos extends CI_Controller
 
     function save_bill(){
 
-        var_dump($_GET);
+        $json = $_GET['json'];
+        print($json[0]['id']);
+
+
 
 
 //        print "Sent json = ".$json;
