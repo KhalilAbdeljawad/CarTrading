@@ -115,6 +115,7 @@
 
 	var selectedRow = 0;
 
+	$("#totalBillPrice").val(0);
 
 	function getExistedRow(id) {
 
@@ -268,6 +269,7 @@
 		console.log(json)
 		$.getJSON("handle_pos/save_bill", json, function (data) {
 
+			console.log("Hellooooooooooooo");
 			alert(data)
 
 			/*if (data.msg != undefined && data.msg == "ERROR") {
