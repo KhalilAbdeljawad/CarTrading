@@ -81,6 +81,8 @@ class Pos_model extends CI_Model {
     function save_bill($data){
 
 
+        $this->db->trans_start();
+
         $status = "done";
 
         if($data['remainder']!=0)
@@ -105,11 +107,19 @@ class Pos_model extends CI_Model {
 
         foreach ($_POST['items'] as $key => $value) {
             foreach ($value as $k => $val) {
-                $insertData[$key][$k] = $value;
+                $insertData[$key][$k] = $val;
             }
+            $insertData[$key]['bill'] = $bill_id;
+            $this->db->insert('bill_element', $insertData[$key]);
         }
 
-        print $insertData;
+
+        $this->db->trans_complete();
+
+        if ($this->db->trans_status() === FALSE)
+            return 'FALSE';
+
+
         return "TRUE";
 
     }

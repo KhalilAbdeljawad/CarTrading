@@ -15,7 +15,7 @@
 
 	<script src="<?php print base_url()."assets/jquery.js"?>"></script>
 	<script src="<?php print base_url()."assets/w2ui/w2ui.js"?>"></script>
-
+	<script src="<?php print base_url()."assets/js/helper.js"?>"></script>
 
 
 
@@ -159,6 +159,10 @@
 
 	</div>
 </div>
+
+
+
+
 
 </body>
 <script>
@@ -346,6 +350,10 @@
 
 	function sell() {
 
+		if($("#totalBillPrice").val()=='0') {
+			console.log("Can't sell without itmes")
+			return false;
+		}
 		var json ;//= JSON.stringify(w2ui['grid'].records);
 
 
@@ -355,7 +363,7 @@
 		for(var a in w2ui['grid'].records) {
 			temp = w2ui['grid'].records[a];
 			if(first++>1) json+=",";
-			json+='{"id":'+temp.id+', "price":'+temp.price+', "quantity":'+temp.quantity+'}'
+			json+='{"item":'+temp.id+', "price":'+temp.price+', "quantity":'+temp.quantity+'}'
 			//console.log("name = " + w2ui['grid'].records[a].name + "  " + w2ui['grid'].records[a].totalPrice)
 		}
 		json+="]";
@@ -372,11 +380,16 @@
 
 		json = JSON.parse('{"items":'+json+'}')
 		console.log(json)
+
 		$.postJSON("handle_pos/save_bill", json, function (data) {
 
-			console.log("Hellooooooooooooo");
-			alert(data)
-
+			console.log(data.result)
+			if(data.result=="TRUE") {
+				popup('عملية بيع','تمت العملية بنجاح')
+				//window.refresh()
+			}else {
+				popup('عملية بيع','لم تتم عملية البيع')
+			}
 			/*if (data.msg != undefined && data.msg == "ERROR") {
 				$("#error").text(item + " " + "غير موجود")
 			} else

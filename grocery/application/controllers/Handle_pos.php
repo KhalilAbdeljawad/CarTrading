@@ -58,31 +58,14 @@ class Handle_pos extends CI_Controller
     function save_bill(){
 
 
-        print_r($_POST);
+    //    print_r($_POST);
+
+
+        $result = $this->pos_model->save_bill($_POST);
 
 
 
-
-/*
-        if(isset($_POST['discount']) and trim($_POST['discount'])!=""){
-            $discount  = $_POST['discount'];
-
-            if(strpos($discount, "%")){
-                $discount=substr($discount, 0, strpos($discount, "%"));
-                if($discount!="0")
-                    $totalPrice = $totalPrice - $discount/100*$totalPrice;
-            }else{
-                $totalPrice = $totalPrice-$discount;
-            }
-
-
-        }
-*/
-        $insertedId = $this->pos_model->save_bill($_POST);
-
-
-
-        echo $insertedId;
+        echo '{"result":"'.$result.'"}';
 
 //        print "Sent json = ".$json;
     }
@@ -91,6 +74,13 @@ class Handle_pos extends CI_Controller
 
     function test(){
         print '{"msg":"you sent to me: '.$_POST["id"].'   with name '.$_POST["name"].'"}';
+    }
+
+
+    function print_receipt(){
+
+        $this->load->view('receipt');
+
     }
 }
 
