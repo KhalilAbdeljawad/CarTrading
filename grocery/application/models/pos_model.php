@@ -78,6 +78,42 @@ class Pos_model extends CI_Model {
         return $data[0];
     }
 
+    function save_bill($data){
+
+
+        $status = "done";
+
+        if($data['remainder']!=0)
+            $status = "suspended";
+
+        $insertData=array(
+            'user' => 1,
+            'total_price' => $data['total_price'],
+            'discount' => $data['discount'],
+            'after_discount' => $data['after_discount'],
+            'paid' => $data['paid'],
+            'remainder' => $data['remainder'],
+            'status' => $status
+
+        );
+
+        $this->db->insert('bill', $insertData);
+
+        $bill_id = $this->db->insert_id();
+
+        $insertData = array();
+
+        foreach ($_POST['items'] as $key => $value) {
+            foreach ($value as $k => $val) {
+                $insertData[$key][$k] = $value;
+            }
+        }
+
+        print $insertData;
+        return "TRUE";
+
+    }
+
     function get_doc_type_by_id($type_id){
 
         $query = "SELECT type_name as doc_type FROM `document_type` where type_id = ".$type_id;
