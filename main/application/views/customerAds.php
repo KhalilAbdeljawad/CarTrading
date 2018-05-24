@@ -52,7 +52,7 @@
                 <li role="presentation"><a href="#">Purchase a Car</a></li>
                 <li role="presentation"><a href="#">Rent a Car</a></li>
                 <?php if (isset($customer) and is_integer((int)$customer)) { ?>
-                    <li role="presentation"><a href="Handle_car/addAd"><span
+                    <li role="presentation"><a href="../Handle_car/addAd"><span
                                     style="color: skyblue">Add New Ad</span></a></li>
                 <?php } ?>
             </ul>
@@ -66,10 +66,12 @@
             <?php } else { ?>
 
                 <button class="btn btn-success btn-sm navbar-btn navbar-right"
-                        onclick="window.location='Registration/signOut'" type="button">LogOut
+                        onclick="window.location='../Registration/signOut'" type="button">LogOut
                 </button>
                 <span style="color:whitesmoke; margin: 5px;margin-top: 20px; margin-right: 50px;"
-                      class="navbar-btn navbar-right"><?php print 'Hi, ' . $name ?></span>
+                      class="navbar-btn navbar-right"><a href="../Homepage/userProfile/<?php print $customer?>"><?php print 'Hi, ' . $name ?></a></span>
+                <span style="color:whitesmoke; margin: 5px;margin-top: 20px; margin-right: 50px;"
+                      class="navbar-btn navbar-right"><a href="../Homepage/myAds">My Ads</a></span>
             <?php } ?>
         </div>
     </div>
@@ -213,7 +215,7 @@
 <div class="container">
     <div class="row">
         <div class="col-md-12">
-            <h3>Search Result</h3></div>
+            <h3>My Ads</h3></div>
         <?php
         if (empty($searchResult))
             print "<h4 style='margin-left: 200px'>No cars found</h4>";
@@ -227,7 +229,8 @@
                 <h4>
                     <a href="<?php print base_url() ?>Homepage/viewAd/<?php print $car->id ?>"><?php print $car->car_title ?></a>
                 </h4>
-                <p>Extra text about the car. </p>
+                <p>Extra text about the car.</p>
+                <p><a href="../Handle_car/updateAdForm/<?php print $car->id ?>" >Edit</a></p>
                 <div class="row">
                     <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2"><i
                                 class="icon ion-android-desktop footer-contacts-icon"></i></div>
