@@ -76,12 +76,15 @@ class Software extends CI_Controller {
 	
 	public function item(){
 		$crud = $this->crud;
-		$crud->set_subject("الأصناف");
+		$crud->set_subject("الأ صناف");
         $crud->set_table('item');
 		$crud->display_as('code','الكود');
 		$crud->display_as('sizes','الأرقام');
 		$crud->display_as('room','غرفة التخزين');
 		$crud->display_as('note','ملاحظات');
+        $crud->display_as('price','السعر');
+        $crud->display_as('name_','النوع');
+        $crud->display_as('quantity','الكمية');
 	//	$crud->columns('employee_id', 'software_name','software_description');
 		//$crud->fields("TICKET", 'LINE', 'product','price');
 		
@@ -102,6 +105,7 @@ class Software extends CI_Controller {
 	
 		//$crud->add_fields('employee_id','needed_software','software_description');
 		$crud->set_relation('room','room','name');
+        $crud->set_relation('name_','names','name_');
 		//$crud->set_relation('employee_id_by_ip','employee','employee_name');
 		
 		//if($this->get_ip_address()!="127.0.0.1" and $this->get_ip_address()!="::1" and $this->get_ip_address()!="172.16.10.59" and $this->get_ip_address()!="172.16.10.69")
@@ -131,35 +135,25 @@ class Software extends CI_Controller {
 		//$crud = $this->crud;
 		$crud->set_subject("الفواتير");
         $crud->set_table('bill');
-		$crud->display_as('code','الكود');
-		$crud->display_as('sizes','الأرقام');
-		$crud->display_as('room','غرفة التخزين');
-		$crud->display_as('note','ملاحظات');
+		$crud->display_as('_date','التاريخ');
+		$crud->display_as('_time','الوقت');
+		$crud->display_as('user','المستخدم');
+		$crud->display_as('total_price','الإجمالي');
+        $crud->display_as('discount','قيمة التخفيض');
+        $crud->display_as('after_discount','الإجمالي بعد التخفيض');
+        $crud->display_as('paid','المدفوع');
+        $crud->display_as('remainder','المتبقي');
+        $crud->display_as('status','حالة الفاتورة');
 	//	$crud->columns('employee_id', 'software_name','software_description');
 		//$crud->fields("TICKET", 'LINE', 'product','price');
-		
-		$crud->unset_back_to_list();
-		
-		$crud->callback_add_field('employee_id_by_ip', function () {
-			$res = $this->db->query("select employee_id from employee where employee_ip ='".$this->get_ip_address()."'");
-			$res = $res->result();
-			//var_dump($res);
-			//var_dump($this->get_ip_address());
-			//var_dump($this->get_ip_address());
-			if(isset($res[0])){
-				$name = $res[0]->employee_id;
-				return '<input type="hidden" maxlength="50" value="'.$name.'" name="employee_id_by_ip">';
-			}
-        return '';// <input type="hidden" maxlength="50" value="" name="phone">';
-    });
+
+		//$crud->unset_back_to_list();
+
 	
 		//$crud->add_fields('employee_id','needed_software','software_description');
 		//$crud->set_relation('room','room','name');
 		//$crud->set_relation('employee_id_by_ip','employee','employee_name');
-		
-		//if($this->get_ip_address()!="127.0.0.1" and $this->get_ip_address()!="::1" and $this->get_ip_address()!="172.16.10.59" and $this->get_ip_address()!="172.16.10.69")
-         //$crud->unset_list();
-        
+
 		/*
 		try{
     $crud->render();
@@ -172,15 +166,82 @@ class Software extends CI_Controller {
     $crud->callback_after_insert(function(){
     	print "<script type='text/javascript'>alert('شكرا،، تم إرسال طلبك');</script>";
     });
+
+        //$crud2 = $this->bill_itmes();
 	//////////////////////////
         $output = $crud->render();
 		
 		$this->to_view($output);
-	
-	return $output;
+
+        //$crud->add_action('Bill Element', '', 'coba/employee');
+        $crud->add_action('Detail', '', '','',array($this,'for_items'));
+
+
+        return $output;
 	//
 	        
 	}
+
+
+    public function for_items($itemCode){
+
+        $crud = new grocery_CRUD();
+        $crud->set_table('bill_element');
+        $crud->where('id', $itemCode);
+
+        //$crud->callback_before_insert(array($this,'before_insert_employee'));
+
+        $output = $crud->render();
+        $this->to_view($output);
+
+    }
+
+
+    public function bill_items(){
+        $crud = $this->crud;
+        $crud->set_subject("الأ صناف");
+        $crud->set_table('bill_element');
+        $crud->display_as('code','الكود');
+        $crud->display_as('sizes','الأرقام');
+        $crud->display_as('room','غرفة التخزين');
+        $crud->display_as('note','ملاحظات');
+        $crud->display_as('price','السعر');
+        $crud->display_as('name_','النوع');
+        $crud->display_as('quantity','الكمية');
+        //	$crud->columns('employee_id', 'software_name','software_description');
+        //$crud->fields("TICKET", 'LINE', 'product','price');
+
+//        $crud->unset_back_to_list();
+
+
+        //$crud->add_fields('employee_id','needed_software','software_description');
+        //$crud->set_relation('room','room','name');
+        //$crud->set_relation('name_','names','name_');
+        //$crud->set_relation('employee_id_by_ip','employee','employee_name');
+
+        //if($this->get_ip_address()!="127.0.0.1" and $this->get_ip_address()!="::1" and $this->get_ip_address()!="172.16.10.59" and $this->get_ip_address()!="172.16.10.69")
+        //$crud->unset_list();
+
+        /*
+        try{
+    $crud->render();
+} catch(Exception $e) {
+    show_error($e->getMessage());
+}*/
+        //$crud->set_theme('datatables');
+
+        ///////////////
+        $crud->callback_after_insert(function(){
+            print "<script type='text/javascript'>alert('شكرا،، تم إرسال طلبك');</script>";
+        });
+        //////////////////////////
+
+//        return $crud;
+        $output = $crud->render();
+
+        $this->to_view($output);
+        //return $output;
+    }
 	 /**
   * Retrieves the best guess of the client's actual IP address.
   * Takes into account numerous HTTP proxy headers due to variations

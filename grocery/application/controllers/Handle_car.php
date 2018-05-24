@@ -48,7 +48,7 @@ class Handle_pos extends CI_Controller
         if(isset($item_id)) {
             $item = $this->pos_model->get_item_by_id($item_id);
             if($item=="ERROR") print '{"msg":"ERROR"}';
-            else print '{"name":"'.$item->name_ .'", "id":'.$item->id.', "price":'.$item->price.'}';
+            else print '{"name":"'.$item->name_ .'", "id":'.$item->id.', "price":'.$item->price.', "quantity":'.$item->quantity.'}';
         }else{
             print '{"msg":"ERROR"}';
         }
@@ -58,7 +58,7 @@ class Handle_pos extends CI_Controller
     function save_bill(){
 
 
-    //    print_r($_POST);
+     //  print_r($_POST);
 
 
         $result = $this->pos_model->save_bill($_POST);
@@ -82,6 +82,35 @@ class Handle_pos extends CI_Controller
         $this->load->view('receipt');
 
     }
+
+
+    function bills(){
+        $this->load->view("bills");
+    }
+
+    function get_bills($limit=100){
+        print $this->pos_model->get_bills($limit);
+    }
+
+
+    function get_bill_elements($bill_id){
+        if(isset($bill_id)) {
+            $elem = $this->pos_model->get_bill_element($bill_id);
+            if($elem=="ERROR") print '{"msg":"ERROR"}';
+            print $elem;
+            //else print '{"item":"'.$elem->item .'", "price":'.$elem->price.', "quantity":'.$elem->quantity.'}';
+        }else{
+            print '{"msg":"ERROR"}';
+        }
+    }
+
+
+
+
+
+
+
+
 }
 
 ?>

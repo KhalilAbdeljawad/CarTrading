@@ -30,6 +30,15 @@ class Pos_model extends CI_Model {
         return $this -> db -> get($this -> table);
     }
 
+    ///////////////////////////////////////
+    function get_last_4_cars() {
+        $this -> db -> where('id', $id);
+        $this->db->order_by('id', 'DESC');
+        $this->db->limit(4);
+        return $this -> db -> get($this -> table);
+    }
+    ///////////////////////////////////////
+
     function save($table, $row) {
         //	var_dump($document);
         $this -> db -> insert($table, $row);
@@ -70,12 +79,45 @@ class Pos_model extends CI_Model {
     }
 
     function get_item_by_id($id) {
-        $query = "SELECT `names`.name_, item.id, price FROM `item`, `names`
-        WHERE item.id ='" . $id . "' AND `names`.id = item.name_;";
+        $query = "SELECT `names`.name_, item.id, price, quantity FROM `item`, `names`
+        WHERE item.id ='" . $id . "' AND `names`.id = item.name_ and quantity>0";
 
         $data = $this -> db -> query($query) -> result();
         if(empty($data)) return "ERROR";
         return $data[0];
+    }
+
+
+    function get_bills($limit) {
+        $query = "SELECT id as 'recid', _date, total_price ,paid, discount, after_discount, remainder FROM `bill`
+        order by id desc";
+
+         if($limit!=0)
+            $query.=" limit $limit";
+
+        $data = $this -> db -> query($query) -> result();
+        if(empty($data)) return "ERROR";
+
+
+        return json_encode($data);
+    }
+
+    function get_bill_element($id) {
+        $query = "SELECT bill_element.id as 'recid', bill, `names`.name_ as item, bill_element.price, bill_element.quantity
+        FROM `bill_element` , `names`, item
+        WHERE bill='" . $id . "' AND `names`.id = item.name_ AND bill_element.item = item.id";
+
+        $data = $this -> db -> query($query) -> result();
+        if(empty($data)) return "ERROR";
+        return json_encode($data);
+    }
+    function get_item_quantity($id) {
+        $query = "SELECT quantity FROM `item` 
+        WHERE item.id ='" . $id . "'";
+
+        $data = $this -> db -> query($query) -> result();
+        if(empty($data)) return "ERROR";
+        return $data[0]->quantity;
     }
 
     function save_bill($data){
@@ -105,12 +147,18 @@ class Pos_model extends CI_Model {
 
         $insertData = array();
 
+        $notif = false;
+
+
         foreach ($_POST['items'] as $key => $value) {
             foreach ($value as $k => $val) {
                 $insertData[$key][$k] = $val;
             }
             $insertData[$key]['bill'] = $bill_id;
             $this->db->insert('bill_element', $insertData[$key]);
+
+            //if($this->get_item_quantity($_POST[$key]['item'])==0)
+
         }
 
 
